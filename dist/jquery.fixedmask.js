@@ -10,7 +10,8 @@
     function addChar(position, maskChar) {
         return function(char) {
             return function(string) {
-                return string.length == position && char != maskChar && (string += maskChar), string;
+                return string.length === position && char !== maskChar && (string += maskChar), 
+                string;
             };
         };
     }

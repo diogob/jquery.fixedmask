@@ -11,12 +11,12 @@
   function addChar(position, maskChar) {
     return function(char){
       return function(string){
-        if(string.length == position && char != maskChar){
+        if(string.length === position && char !== maskChar){
           string = (string + maskChar);
         }
         return string;
-      }
-    }
+      };
+    };
   }
 
   function readMaskDefinition(maskChars){
@@ -24,14 +24,14 @@
       return _.compact(_.map(maskDefinition, function(letter, index){
         return (maskChars.indexOf(letter) >= 0 ? null : [index, letter]);
       }));
-    }
+    };
   }
 
   function applyMask(maskFunctions){
     return function(string, newChar){
-      var addNewCharFunctions = _.map(maskFunctions, function(el){ return el(newChar) });
+      var addNewCharFunctions = _.map(maskFunctions, function(el){ return el(newChar); });
       var applyMaskFunctions = _.reduce(addNewCharFunctions, function(memo, f){ 
-        return (_.isFunction(memo) ? _.compose(f, memo) : f) 
+        return (_.isFunction(memo) ? _.compose(f, memo) : f); 
       });
       return applyMaskFunctions(string);
     }
