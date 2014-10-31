@@ -7,7 +7,7 @@
         factory(jQuery, _);
     }
 }(function ($, _) {
-
+  // Return a function that will add a new character to a string and include a mask character if this is the case
   function addChar(position, maskChar) {
     return function(char){
       return function(string){
@@ -19,6 +19,9 @@
     };
   }
 
+  // Return an array containing a definition of which are the fixed characters in the mask using the format:
+  // [[position, character]]
+  // All characters in maskChars are ignored (for they are replaced by user input)
   function readMaskDefinition(maskChars){
     return function(maskDefinition){
       return _.compact(_.map(maskDefinition, function(letter, index){
@@ -27,6 +30,10 @@
     };
   }
 
+  // Apply the mask defined as an array of partially applied addChar functions
+  // composing them and reading the new character that will be added to a given string
+  // It should be partially applied using the maskFunctions 
+  // to be called only with string and new char on a keypress event
   function applyMask(maskFunctions){
     return function(string, newChar){
       var addNewCharFunctions = _.map(maskFunctions, function(el){ return el(newChar); });
@@ -37,9 +44,6 @@
     };
   }
 
-  // On key press
-  //applyMask(addMaskFunctions, 'tes', 't');
-
   $.fixedMask = {
     maskChars: '9A'
   };
@@ -48,7 +52,7 @@
   $.fn.extend({
     fixedMask: function(mask){
       return this.each(function() {
-        // Store array of mask functions in element data
+        // Store mask function in element data
         var input = $(this);
         var addMaskFunctions = _.map($.fixedMask.readMask(mask || input.data('fixed-mask')), function(maskChar){ return addChar(maskChar[0], maskChar[1]); });
         input.data('applyMask', applyMask(addMaskFunctions));
