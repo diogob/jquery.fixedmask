@@ -34,7 +34,7 @@
         return (_.isFunction(memo) ? _.compose(f, memo) : f); 
       });
       return applyMaskFunctions(string);
-    }
+    };
   }
 
   // On key press
@@ -46,7 +46,7 @@
   $.fixedMask.readMask = readMaskDefinition($.fixedMask.maskChars);
     
   $.fn.extend({
-    fixedMask: function(mask, settings){
+    fixedMask: function(mask){
       return this.each(function() {
         // Store array of mask functions in element data
         var input = $(this);
