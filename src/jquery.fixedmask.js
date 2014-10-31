@@ -50,6 +50,10 @@
         var input = $(this);
         var addMaskFunctions = _.map($.fixedMask.readMask(mask || input.data('fixed-mask')), function(maskChar){ return addChar(maskChar[0], maskChar[1]); });
         input.data('fixedMaskFunctions', addMaskFunctions);
+        input.keypress(function(event){
+          var chr = String.fromCharCode(event.which);
+          input.val(applyMask(input.data('fixedMaskFunctions'), input.val(), chr));
+        });
       });
     }
   });
