@@ -1,18 +1,18 @@
 feature("Masking an Input", function() {	
   describe("#fixedMask", function(){
-    var functions;
+    var applyMask;
     beforeEach(function(){
-      functions = input.fixedMask("9.9.9-9").data('fixedMaskFunctions');
+      applyMask = input.fixedMask("9.9.9-9").data('applyMask');
     });
 
     it("should create fixedMaskFunctions in input data", function(){
-      expect(functions).toEqual([jasmine.any(Function), jasmine.any(Function), jasmine.any(Function)]);
+      expect(applyMask).toEqual(jasmine.any(Function));
     })
 
-    it("the fixedMaskFunctions should work", function(){
-      expect(functions[0]('1')('1')).toEqual('1.');
-      expect(functions[1]('1')('1.2')).toEqual('1.2.');
-      expect(functions[2]('1')('1.2.3')).toEqual('1.2.3-');
+    it("the applyMask should work", function(){
+      expect(applyMask('1', '1')).toEqual('1.');
+      expect(applyMask('1.2', '1')).toEqual('1.2.');
+      expect(applyMask('1.2.3', '1')).toEqual('1.2.3-');
     });
   });
 

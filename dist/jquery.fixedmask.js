@@ -21,13 +21,15 @@
             }));
         };
     }
-    function applyMask(maskFunctions, string, newChar) {
-        var addNewCharFunctions = _.map(maskFunctions, function(el) {
-            return el(newChar);
-        }), applyMaskFunctions = _.reduce(addNewCharFunctions, function(memo, f) {
-            return _.isFunction(memo) ? _.compose(f, memo) : f;
-        });
-        return applyMaskFunctions(string);
+    function applyMask(maskFunctions) {
+        return function(string, newChar) {
+            var addNewCharFunctions = _.map(maskFunctions, function(el) {
+                return el(newChar);
+            }), applyMaskFunctions = _.reduce(addNewCharFunctions, function(memo, f) {
+                return _.isFunction(memo) ? _.compose(f, memo) : f;
+            });
+            return applyMaskFunctions(string);
+        };
     }
     $.fixedMask = {
         maskChars: "9A"
@@ -37,9 +39,9 @@
                 var input = $(this), addMaskFunctions = _.map($.fixedMask.readMask(mask || input.data("fixed-mask")), function(maskChar) {
                     return addChar(maskChar[0], maskChar[1]);
                 });
-                input.data("fixedMaskFunctions", addMaskFunctions), input.keypress(function(event) {
+                input.data("applyMask", applyMask(addMaskFunctions)), input.keypress(function(event) {
                     var chr = String.fromCharCode(event.which);
-                    input.val(applyMask(input.data("fixedMaskFunctions"), input.val(), chr));
+                    input.val(input.data("applyMask")(input.val(), chr));
                 });
             });
         }
