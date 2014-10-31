@@ -30,11 +30,12 @@
     };
   }
 
-  // Apply the mask defined as an array of partially applied addChar functions
+  // Apply the mask defintion using an array of partially applied addChar functions
   // composing them and reading the new character that will be added to a given string
-  // It should be partially applied using the maskFunctions 
+  // It should be partially applied using the maskDefinition 
   // to be called only with string and new char on a keypress event
-  function applyMask(maskFunctions){
+  function applyMask(maskDefinition){
+    var maskFunctions = _.map(maskDefinition, function(maskChar){ return addChar(maskChar[0], maskChar[1]); });
     return function(string, newChar){
       var addNewCharFunctions = _.map(maskFunctions, function(el){ return el(newChar); });
       var applyMaskFunctions = _.reduce(addNewCharFunctions, function(memo, f){ 
@@ -54,8 +55,7 @@
       return this.each(function() {
         // Store mask function in element data
         var input = $(this);
-        var addMaskFunctions = _.map($.fixedMask.readMask(mask || input.data('fixed-mask')), function(maskChar){ return addChar(maskChar[0], maskChar[1]); });
-        input.data('applyMask', applyMask(addMaskFunctions));
+        input.data('applyMask', applyMask($.fixedMask.readMask(mask || input.data('fixed-mask'))));
         input.keypress(function(event){
           var chr = String.fromCharCode(event.which);
           input.val(input.data('applyMask')(input.val(), chr));
