@@ -12,7 +12,7 @@
     return function(char){
       return function(string){
         if(string.length === position && char !== maskChar){
-          string = (string + maskChar);
+          return (string + maskChar);
         }
         return string;
       };
@@ -22,10 +22,10 @@
   // Return an array containing a definition of which are the fixed characters in the mask using the format:
   // [[position, character]]
   // All characters in maskChars are ignored (for they are replaced by user input)
-  function readMaskDefinition(maskChars){
+  function readMaskDefinition(maskCharDefinitions){
     return function(maskDefinition){
       return _.compact(_.map(maskDefinition, function(letter, index){
-        return (maskChars.indexOf(letter) >= 0 ? null : [index, letter]);
+        return (letter in maskCharDefinitions ? null : [index, letter]);
       }));
     };
   }
@@ -45,22 +45,55 @@
     };
   }
 
+  // Decide if a character is allowed in a position within a given maskDefinition
+  function isCharAllowed(maskCharDefinitions){
+    return function(maskDefinition){
+      return function(position, newChar){
+        var maskChar = maskDefinition.charAt(position);
+        if(maskChar in maskCharDefinitions){
+          return maskCharDefinitions[maskChar].test(newChar);
+        }
+        else{
+          return (newChar === maskChar || isCharAllowed(maskCharDefinitions)(maskDefinition)(position+1, newChar));
+        }
+      };
+    };
+  }
+
   $.fixedMask = {
-    maskChars: '9A'
+    maskCharDefinitions: {
+      '9' : /\d/,
+      'A' : /[a-zA-Z]/
+    }
   };
-  $.fixedMask.readMask = readMaskDefinition($.fixedMask.maskChars);
+
+  // Define some functions that depend on global definitions during plugin load
+  $.fixedMask.readMask = readMaskDefinition($.fixedMask.maskCharDefinitions);
+  $.fixedMask.isCharAllowed = isCharAllowed($.fixedMask.maskCharDefinitions);
     
   $.fn.extend({
     fixedMask: function(mask){
       return this.each(function() {
         var input = $(this);
+        // Define some functions that depend on maskDefinition during plugin setup
+        var maskDefinition = mask || input.data('fixed-mask');
+        var applyInputMask = applyMask($.fixedMask.readMask(maskDefinition));
+        var restrictInput = $.fixedMask.isCharAllowed(maskDefinition);
 
         // Private function to apply mask in keypress
+        // Has to be defined here so we can partially apply applyMask using the mask definition
         function applyMaskOnKeyPress(event){
           var chr = String.fromCharCode(event.which);
-          var applyElementMask = applyMask($.fixedMask.readMask(mask || input.data('fixed-mask')));
-          input.val(applyElementMask(input.val(), chr));
+          input.val(applyInputMask(input.val(), chr));
         }
+
+        function restrictChars(event){
+          var chr = String.fromCharCode(event.which);
+          return restrictInput(input.prop('selectionStart'), chr);
+        }
+
+        // Bind events
+        input.keypress(restrictChars);
         input.keypress(applyMaskOnKeyPress);
       });
     }

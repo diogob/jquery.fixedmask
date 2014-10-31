@@ -1,5 +1,20 @@
+describe("Restrict input according to mask", function(){
+  beforeEach(function(){
+    input.val('').fixedMask("9.9.9-9");
+  });
+
+  it("should restrict input when inputting letters", function(){
+    input.mashKeys("a");
+    expect(input).toHaveValue('');
+  });
+
+  it("should allow input when inputting special characters out of place", function(){
+    input.mashKeys(".");
+    expect(input).toHaveValue('');
+  });
+});
+
 describe("Apply forward mask", function(){
-  var applyMask;
   beforeEach(function(){
     input.val('').fixedMask("9.9.9-9");
   });
@@ -16,6 +31,11 @@ describe("Apply forward mask", function(){
 
   it("should apply mask when inputting 4 digits", function(){
     input.mashKeys("1234");
+    expect(input).toHaveValue('1.2.3-4');
+  });
+
+  it("should apply mask when inputting 4 digits with special chars", function(){
+    input.mashKeys("1.2.3-4");
     expect(input).toHaveValue('1.2.3-4');
   });
 });
