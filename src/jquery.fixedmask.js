@@ -53,13 +53,15 @@
   $.fn.extend({
     fixedMask: function(mask){
       return this.each(function() {
-        // Store mask function in element data
         var input = $(this);
-        input.data('applyMask', applyMask($.fixedMask.readMask(mask || input.data('fixed-mask'))));
-        input.keypress(function(event){
+
+        // Private function to apply mask in keypress
+        function applyMaskOnKeyPress(event){
           var chr = String.fromCharCode(event.which);
-          input.val(input.data('applyMask')(input.val(), chr));
-        });
+          var applyElementMask = applyMask($.fixedMask.readMask(mask || input.data('fixed-mask')));
+          input.val(applyElementMask(input.val(), chr));
+        }
+        input.keypress(applyMaskOnKeyPress);
       });
     }
   });
