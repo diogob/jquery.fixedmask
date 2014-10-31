@@ -49,6 +49,10 @@
   function isCharAllowed(maskCharDefinitions){
     return function(maskDefinition){
       return function(position, newChar){
+        if(position === maskDefinition.length){
+          return false;
+        }
+
         var maskChar = maskDefinition.charAt(position);
         if(maskChar in maskCharDefinitions){
           return maskCharDefinitions[maskChar].test(newChar);

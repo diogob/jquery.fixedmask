@@ -8,6 +8,11 @@ describe("Restrict input according to mask", function(){
     expect(input).toHaveValue('');
   });
 
+  it("should restrict input when inputting more digits than the mask allows", function(){
+    input.mashKeys("12345");
+    expect(input).toHaveValue('1.2.3-4');
+  });
+
   it("should allow input when inputting special characters out of place", function(){
     input.mashKeys(".");
     expect(input).toHaveValue('');
