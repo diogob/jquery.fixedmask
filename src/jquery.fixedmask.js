@@ -84,21 +84,24 @@
         var applyInputMask = applyMask($.fixedMask.readMask(maskDefinition));
         var restrictInput = $.fixedMask.isCharAllowed(maskDefinition);
 
-        // Private function to apply mask in keypress
-        // Has to be defined here so we can partially apply applyMask using the mask definition
-        function applyMaskOnKeyPress(event){
-          var chr = String.fromCharCode(event.which);
-          input.val(applyInputMask(input.val(), chr));
-        }
-
         function restrictChars(event){
           var chr = String.fromCharCode(event.which);
           return restrictInput(input.prop('selectionStart'), chr);
         }
 
+        function reformat(event){
+          input.val(_.reduce(input.val(), function(memo, chr, index){
+            if(restrictInput(memo.length, chr)){
+              memo = applyInputMask(memo, chr) + chr;
+            }
+            return memo;
+          }, ''));
+        }
+
         // Bind events
-        input.keypress(restrictChars);
-        input.keypress(applyMaskOnKeyPress);
+        input.
+          keypress(restrictChars).
+          on('input', reformat);
       });
     }
   });

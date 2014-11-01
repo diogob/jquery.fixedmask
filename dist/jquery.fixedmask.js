@@ -37,13 +37,13 @@
     function isCharAllowed(maskCharDefinitions) {
         return function(maskDefinition) {
             return function(position, newChar) {
+                if (position === maskDefinition.length) return !1;
                 var maskChar = maskDefinition.charAt(position);
                 return maskChar in maskCharDefinitions ? maskCharDefinitions[maskChar].test(newChar) : newChar === maskChar || isCharAllowed(maskCharDefinitions)(maskDefinition)(position + 1, newChar);
             };
         };
     }
     $.fixedMask = {
-        maskChars: "9A",
         maskCharDefinitions: {
             "9": /\d/,
             A: /[a-zA-Z]/
@@ -60,8 +60,14 @@
                     var chr = String.fromCharCode(event.which);
                     return restrictInput(input.prop("selectionStart"), chr);
                 }
+                function reformat() {
+                    input.val(_.reduce(input.val(), function(memo, chr) {
+                        return restrictInput(memo.length, chr) && (memo = applyInputMask(memo, chr) + chr), 
+                        memo;
+                    }, ""));
+                }
                 var input = $(this), maskDefinition = mask || input.data("fixed-mask"), applyInputMask = applyMask($.fixedMask.readMask(maskDefinition)), restrictInput = $.fixedMask.isCharAllowed(maskDefinition);
-                input.keypress(restrictChars), input.keypress(applyMaskOnKeyPress);
+                input.keypress(restrictChars).keypress(applyMaskOnKeyPress).on("input", reformat);
             });
         }
     });
