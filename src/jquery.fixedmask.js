@@ -89,8 +89,8 @@
           return restrictInput(input.prop('selectionStart'), chr);
         }
 
-        function reformat(event){
-          input.val(_.reduce(input.val(), function(memo, chr, index){
+        function reformat(){
+          input.val(_.reduce(input.val(), function(memo, chr){
             if(restrictInput(memo.length, chr)){
               memo = applyInputMask(memo, chr) + chr;
             }
