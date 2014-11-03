@@ -62,8 +62,11 @@
                         memo;
                     }, ""));
                 }
-                var input = $(this), maskDefinition = mask || input.data("fixed-mask"), applyInputMask = applyMask($.fixedMask.readMask(maskDefinition)), restrictInput = $.fixedMask.isCharAllowed(maskDefinition);
-                input.keypress(restrictChars).on("input", reformat);
+                var input = $(this);
+                if ("off" !== mask) {
+                    var maskDefinition = mask || input.data("fixed-mask"), applyInputMask = applyMask($.fixedMask.readMask(maskDefinition)), restrictInput = $.fixedMask.isCharAllowed(maskDefinition);
+                    input.on("keypress.fixedmask", restrictChars).on("input.fixedmask", reformat);
+                } else input.off("keypress.fixedmask").off("input.fixedmask");
             });
         }
     });

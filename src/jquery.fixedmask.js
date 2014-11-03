@@ -79,29 +79,38 @@
     fixedMask: function(mask){
       return this.each(function() {
         var input = $(this);
-        // Define some functions that depend on maskDefinition during plugin setup
-        var maskDefinition = mask || input.data('fixed-mask');
-        var applyInputMask = applyMask($.fixedMask.readMask(maskDefinition));
-        var restrictInput = $.fixedMask.isCharAllowed(maskDefinition);
 
-        function restrictChars(event){
-          var chr = String.fromCharCode(event.which);
-          return restrictInput(input.prop('selectionStart'), chr);
+        if(mask !== 'off'){
+          // Define some functions that depend on maskDefinition during plugin setup
+          var maskDefinition = mask || input.data('fixed-mask');
+          var applyInputMask = applyMask($.fixedMask.readMask(maskDefinition));
+          var restrictInput = $.fixedMask.isCharAllowed(maskDefinition);
+
+          function restrictChars(event){
+            var chr = String.fromCharCode(event.which);
+            return restrictInput(input.prop('selectionStart'), chr);
+          }
+
+          function reformat(){
+            input.val(_.reduce(input.val(), function(memo, chr){
+              if(restrictInput(memo.length, chr)){
+                memo = applyInputMask(memo, chr) + chr;
+              }
+              return memo;
+            }, ''));
+          }
+
+          // Bind events
+          input.
+            on('keypress.fixedmask', restrictChars).
+            on('input.fixedmask', reformat);
         }
-
-        function reformat(){
-          input.val(_.reduce(input.val(), function(memo, chr){
-            if(restrictInput(memo.length, chr)){
-              memo = applyInputMask(memo, chr) + chr;
-            }
-            return memo;
-          }, ''));
+        else{
+          // Bind events
+          input.
+            off('keypress.fixedmask').
+            off('input.fixedmask');
         }
-
-        // Bind events
-        input.
-          keypress(restrictChars).
-          on('input', reformat);
       });
     }
   });
