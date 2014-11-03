@@ -52,10 +52,6 @@
     $.fn.extend({
         fixedMask: function(mask) {
             return this.each(function() {
-                function applyMaskOnKeyPress(event) {
-                    var chr = String.fromCharCode(event.which);
-                    input.val(applyInputMask(input.val(), chr));
-                }
                 function restrictChars(event) {
                     var chr = String.fromCharCode(event.which);
                     return restrictInput(input.prop("selectionStart"), chr);
@@ -67,7 +63,7 @@
                     }, ""));
                 }
                 var input = $(this), maskDefinition = mask || input.data("fixed-mask"), applyInputMask = applyMask($.fixedMask.readMask(maskDefinition)), restrictInput = $.fixedMask.isCharAllowed(maskDefinition);
-                input.keypress(restrictChars).keypress(applyMaskOnKeyPress).on("input", reformat);
+                input.keypress(restrictChars).on("input", reformat);
             });
         }
     });
