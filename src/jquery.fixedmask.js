@@ -49,7 +49,7 @@
   function isCharAllowed(maskCharDefinitions){
     return function(maskDefinition){
       return function(position, newChar){
-        if(position === maskDefinition.length){
+        if(position >= maskDefinition.length){
           return false;
         }
 
@@ -86,11 +86,6 @@
           var applyInputMask = applyMask($.fixedMask.readMask(maskDefinition));
           var restrictInput = $.fixedMask.isCharAllowed(maskDefinition);
 
-          function restrictChars(event){
-            var chr = String.fromCharCode(event.which);
-            return restrictInput(input.prop('selectionStart'), chr);
-          }
-
           function reformat(){
             input.val(_.reduce(input.val(), function(memo, chr){
               if(restrictInput(memo.length, chr)){
@@ -104,15 +99,11 @@
           reformat();
 
           // Bind events
-          input.
-            on('keypress.fixedmask', restrictChars).
-            on('input.fixedmask', reformat);
+          input.on('input.fixedmask', reformat);
         }
         else{
           // Bind events
-          input.
-            off('keypress.fixedmask').
-            off('input.fixedmask');
+          input.off('input.fixedmask');
         }
       });
     }
