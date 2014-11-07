@@ -37,7 +37,7 @@
     function isCharAllowed(maskCharDefinitions) {
         return function(maskDefinition) {
             return function(position, newChar) {
-                if (position === maskDefinition.length) return !1;
+                if (position >= maskDefinition.length) return !1;
                 var maskChar = maskDefinition.charAt(position);
                 return maskChar in maskCharDefinitions ? maskCharDefinitions[maskChar].test(newChar) : newChar === maskChar || isCharAllowed(maskCharDefinitions)(maskDefinition)(position + 1, newChar);
             };
@@ -52,10 +52,6 @@
     $.fn.extend({
         fixedMask: function(mask) {
             return this.each(function() {
-                function restrictChars(event) {
-                    var chr = String.fromCharCode(event.which);
-                    return restrictInput(input.prop("selectionStart"), chr);
-                }
                 function reformat() {
                     input.val(_.reduce(input.val(), function(memo, chr) {
                         return restrictInput(memo.length, chr) && (memo = applyInputMask(memo, chr) + chr), 
@@ -65,8 +61,8 @@
                 var input = $(this);
                 if ("off" !== mask) {
                     var maskDefinition = mask || input.data("fixed-mask"), applyInputMask = applyMask($.fixedMask.readMask(maskDefinition)), restrictInput = $.fixedMask.isCharAllowed(maskDefinition);
-                    reformat(), input.on("keypress.fixedmask", restrictChars).on("input.fixedmask", reformat);
-                } else input.off("keypress.fixedmask").off("input.fixedmask");
+                    reformat(), input.on("input.fixedmask", reformat);
+                } else input.off("input.fixedmask");
             });
         }
     });
