@@ -1,3 +1,13 @@
+describe("Restrict and format input according to mask after the mask setup", function(){
+  beforeEach(function(){
+    input.val('a12345678').fixedMask("9.9.9-9");
+  });
+
+  it("should restrict and format input", function(){
+    expect(input).toHaveValue('1.2.3-4');
+  });
+});
+
 describe("Restrict and format input according to mask after pasting content", function(){
   beforeEach(function(){
     input.val('').fixedMask("9.9.9-9").val('a12345678').trigger('input');

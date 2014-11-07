@@ -100,6 +100,9 @@
             }, ''));
           }
 
+          // Initial formatting
+          reformat();
+
           // Bind events
           input.
             on('keypress.fixedmask', restrictChars).
