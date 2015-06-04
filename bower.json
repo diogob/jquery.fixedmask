@@ -1,0 +1,23 @@
+{
+  "name": "jquery.fixedmask",
+  "version": "1.0.0",
+  "homepage": "https://github.com/diogob/jquery.fixedmask",
+  "authors": [
+    "Diogo Biazus <diogo@biazus.me>"
+  ],
+  "description": "jQuery Fixed Size Input Mask Plugin",
+  "main": "dist/jquery.fixedmask.js",
+  "keywords": [
+    "jquery",
+    "input",
+    "mask"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
