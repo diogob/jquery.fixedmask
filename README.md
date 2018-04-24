@@ -1,4 +1,9 @@
-#jquery.fixedmask [![Build Status](https://travis-ci.org/diogob/jquery.fixedmask.svg?branch=master)](https://travis-ci.org/diogob/jquery.fixedmask) [![Code Climate](https://codeclimate.com/github/diogob/jquery.fixedmask/badges/gpa.svg)](https://codeclimate.com/github/diogob/jquery.fixedmask)
+# jquery.fixedmask [![Build Status](https://travis-ci.org/diogob/jquery.fixedmask.svg?branch=master)](https://travis-ci.org/diogob/jquery.fixedmask) [![Code Climate](https://codeclimate.com/github/diogob/jquery.fixedmask/badges/gpa.svg)](https://codeclimate.com/github/diogob/jquery.fixedmask)
+
+## Requirements
+
+ * jQuery
+ * underscore
 
 ## Use cases
 What this library is supposed to do:
